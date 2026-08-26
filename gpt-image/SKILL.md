@@ -1,6 +1,6 @@
 ---
 name: gpt-image
-description: Generate or edit raster images through the user's ChatGPT subscription and save or preview workspace PNGs. Use for text-to-image, local-reference generation, edits, follow-up revisions, variants, multi-image batches, or subscription-backed setup in Codex, Claude Code, and compatible local agents. Preserve direct prompts verbatim; develop distinct per-output prompts when the user delegates multiple concepts. Attach actual reference files. Prefer host-native image_gen; otherwise use Codex CLI with ChatGPT sign-in. Never use the Images API, OPENAI_API_KEY, or API-key login.
+description: Generate or edit raster images through the user's ChatGPT subscription and save or preview workspace PNGs. Use for text-to-image, local-reference generation, edits, follow-up revisions, variants, multi-image batches, or subscription-backed setup in Codex, Claude Code, Qwen Code, and compatible local agents. Preserve direct prompts verbatim; develop distinct per-output prompts when the user delegates multiple concepts. Attach actual reference files. Prefer host-native image_gen; otherwise use Codex CLI with ChatGPT sign-in. Never use the Images API, OPENAI_API_KEY, or API-key login.
 ---
 
 # GPT Image Skill
@@ -18,7 +18,7 @@ Generate or edit one or more raster images, save results under the current works
 ## Choose the route
 
 1. Use the host's `image_gen` tool directly when it is available. Do not install Node.js or start nested Codex in that case.
-2. Otherwise use `scripts/gpt_image.mjs`. Claude Code and generic local agents need Node.js 22+, Codex CLI, and Sign in with ChatGPT in the same OS environment.
+2. Otherwise use `scripts/gpt_image.mjs`. Claude Code, Qwen Code, and generic local agents need Node.js 22+, Codex CLI, and Sign in with ChatGPT in the same OS environment.
 
 Read [image-workflows.md](references/image-workflows.md) for references, Claude attachments, edits, follow-up revisions, or multiple images. Read [subscription-runtime.md](references/subscription-runtime.md) for authentication or architecture. Read [platform-setup.md](references/platform-setup.md) only when setup is missing or uncertain.
 
@@ -44,7 +44,7 @@ Read [image-workflows.md](references/image-workflows.md) for references, Claude 
 
 ## Bootstrap the bridge
 
-Resolve this installed skill directory from the loaded `SKILL.md`; `${CLAUDE_SKILL_DIR}` points to it in Claude Code. Quote paths containing spaces.
+Resolve this installed skill directory from the loaded `SKILL.md`; `${CLAUDE_SKILL_DIR}` points to it in Claude Code, and `~/.qwen/skills/gpt-image` is the installed location in Qwen Code. Quote paths containing spaces.
 
 Check `node --version` first. If Node.js is absent or older than 22, follow [platform-setup.md](references/platform-setup.md). After the user authorizes user-level skill links, Codex installation, and device login, run:
 
@@ -52,7 +52,7 @@ Check `node --version` first. If Node.js is absent or older than 22, follow [pla
 node <skill-folder>/scripts/gpt_image.mjs bootstrap --target all --yes --json
 ```
 
-The command installs non-destructive Codex and Claude skill links, installs a missing Codex CLI from the official platform installer, starts Sign in with ChatGPT when signed out, and returns one consolidated readiness report plus `getting_started`. It reuses the auth result already obtained during setup rather than running a second diagnostic pass. It does not generate an image or require a no-image setup check.
+The command installs non-destructive Codex, Claude, and Qwen skill links, installs a missing Codex CLI from the official platform installer, starts Sign in with ChatGPT when signed out, and returns one consolidated readiness report plus `getting_started`. It reuses the auth result already obtained during setup rather than running a second diagnostic pass. It does not generate an image or require a no-image setup check.
 
 After successful installation, present `getting_started` once in the user's language. Keep it brief: say setup is ready, list common ratio requests (`1:1`, `16:9`, `9:16`, `4:3`, `3:4`), mention natural-language quality phrases (`draft`, `high quality`, `high detail, final quality`), and show one creation example plus one reference or revision example. Explain that exact pixel dimensions may vary. Do not repeat this guide after ordinary image requests.
 

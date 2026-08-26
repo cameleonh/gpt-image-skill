@@ -100,13 +100,14 @@ node gpt-image/scripts/validate_skill.mjs
 node gpt-image/scripts/gpt_image.mjs bootstrap --target all --yes --json
 ```
 
-On macOS, Linux, and WSL2 this creates symlinks. On native Windows it creates directory junctions. The installer refuses to replace an unrelated existing path.
+On macOS, Linux, and WSL2 this creates symlinks. On native Windows it creates directory junctions. The installer refuses to replace an unrelated existing path. Qwen Code reads skills from `~/.qwen/skills`; a new Qwen Code session is required after installation for the skill to be discovered.
 
 Windows host paths resolve under `%USERPROFILE%`:
 
 ```powershell
 Get-Item "$env:USERPROFILE\.agents\skills\gpt-image"
 Get-Item "$env:USERPROFILE\.claude\skills\gpt-image"
+Get-Item "$env:USERPROFILE\.qwen\skills\gpt-image"
 ```
 
 ## Stage 4: install Codex CLI when missing
@@ -164,7 +165,7 @@ If an installer succeeds but `doctor` still cannot find a command:
 1. Close and reopen the terminal or agent host.
 2. Run `node --version`, `git --version`, and `codex --version` in that same terminal.
 3. On WSL2, confirm the paths are Linux paths and `echo $WSL_DISTRO_NAME` is non-empty.
-4. Restart Codex or Claude Code after first skill installation if its skill list is stale.
+4. Restart Codex, Claude Code, or Qwen Code after first skill installation if its skill list is stale.
 5. Do not work around PATH failure by invoking an API endpoint.
 
 ## Setup completion checks

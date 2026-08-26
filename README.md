@@ -2,7 +2,7 @@
 
 [![Validate skill](https://github.com/GENEXIS-AI/gpt-image-skill/actions/workflows/validate.yml/badge.svg)](https://github.com/GENEXIS-AI/gpt-image-skill/actions/workflows/validate.yml)
 
-Generate and edit GPT images from Codex, Claude Code, or another compatible local agent through the user's **ChatGPT subscription**. Direct prompts stay unchanged; when the user delegates several different designs, the agent develops a distinct image-ready prompt for each concept. Real reference files pass into generation, results stay in the active project, and ready outputs run with bounded parallelism.
+Generate and edit GPT images from Codex, Claude Code, Qwen Code, or another compatible local agent through the user's **ChatGPT subscription**. Direct prompts stay unchanged; when the user delegates several different designs, the agent develops a distinct image-ready prompt for each concept. Real reference files pass into generation, results stay in the active project, and ready outputs run with bounded parallelism.
 
 ```text
 install skill → Sign in with ChatGPT → direct prompt or delegated concept prompts + local image inputs
@@ -44,7 +44,7 @@ Do not use unexplained jargon such as "dry-run"; call it a setup check that does
 
 This prompt authorizes ordinary user-level setup without authorizing administrator elevation, destructive changes, replacement of existing authentication, a live generation, or a GitHub Star. The full boundary is in [AGENT_INSTALL.md](./AGENT_INSTALL.md).
 
-After setup, invoke `$gpt-image` in Codex or `/gpt-image` in Claude Code. The host loads the concise skill only for image tasks; it does not need to reread this README on every request.
+After setup, invoke `$gpt-image` in Codex, `/gpt-image` in Claude Code, or `gpt-image` in Qwen Code (e.g. `/gpt-image` skill invocation or a plain image request that names the skill). The host loads the concise skill only for image tasks; it does not need to reread this README on every request.
 
 ## What the agent shows after installation
 
@@ -104,7 +104,7 @@ Planning, the setup check that does not create an image (`--dry-run`), `capabili
 - Uses Codex's built-in `$imagegen` under **Sign in with ChatGPT**
 - Uses a host-native `image_gen` tool directly when the calling host already exposes one
 - Blocks `OPENAI_API_KEY`, API-key Codex login, and Images API fallback
-- Installs the same `gpt-image` skill for Codex and Claude Code
+- Installs the same `gpt-image` skill for Codex, Claude Code, and Qwen Code
 - Preserves direct prompts verbatim and honors delegated multi-concept design work
 - Supports one or multiple references with deterministic attachment order
 - Supports existing-image edits, follow-up revisions, variations, compositing, transparency, exact text, and dense-layout drafts
@@ -179,7 +179,8 @@ Installed locations:
 
 - Codex: `~/.agents/skills/gpt-image`
 - Claude Code: `~/.claude/skills/gpt-image`
-- Native Windows: `$env:USERPROFILE\.agents\skills\gpt-image` and `$env:USERPROFILE\.claude\skills\gpt-image`
+- Qwen Code: `~/.qwen/skills/gpt-image`
+- Native Windows: `$env:USERPROFILE\.agents\skills\gpt-image`, `$env:USERPROFILE\.claude\skills\gpt-image`, and `$env:USERPROFILE\.qwen\skills\gpt-image`
 
 macOS, Linux, and WSL2 use symlinks. Native Windows uses directory junctions. Existing unrelated paths are never replaced.
 
@@ -224,6 +225,12 @@ Claude Code:
 
 ```text
 /gpt-image A cobalt-blue glass robot on a warm off-white background.
+```
+
+Qwen Code:
+
+```text
+gpt-image 스킬로 이미지 생성: 따뜻한 아이보리 배경의 코발트블루 유리 로봇.
 ```
 
 Direct runner:
@@ -418,6 +425,14 @@ node "$InstallDir\gpt-image\scripts\gpt_image.mjs" bootstrap --target all --yes 
     └── scripts/
         ├── gpt_image.mjs
         └── validate_skill.mjs
+```
+
+Installed skill links:
+
+```text
+~/.agents/skills/gpt-image   (Codex)
+~/.claude/skills/gpt-image   (Claude Code)
+~/.qwen/skills/gpt-image     (Qwen Code)
 ```
 
 Official references:

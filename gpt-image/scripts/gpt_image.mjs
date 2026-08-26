@@ -110,8 +110,8 @@ function usage() {
   return `GPT Image Skill — ChatGPT subscription only
 
 Usage:
-  node scripts/gpt_image.mjs bootstrap --yes [--target all|codex|claude] [--json]
-  node scripts/gpt_image.mjs install [--target all|codex|claude] [--dry-run] [--json]
+  node scripts/gpt_image.mjs bootstrap --yes [--target all|codex|claude|qwen] [--json]
+  node scripts/gpt_image.mjs install [--target all|codex|claude|qwen] [--dry-run] [--json]
   node scripts/gpt_image.mjs verify-installers [--json]
   node scripts/gpt_image.mjs install-codex --yes
   node scripts/gpt_image.mjs login
@@ -587,6 +587,7 @@ function gettingStartedGuide() {
     examples: {
       codex: "$gpt-image Create a cozy reading room at sunset, 16:9, high quality.",
       claude: "/gpt-image Create a square product image of a blue glass robot, 1:1, high detail, final quality.",
+      qwen: "이미지 생성해줘: 노을 지는 아늑한 독서실, 16:9, high quality. (스킬 gpt-image 사용)",
       reference: "/gpt-image Use @references/character.png as the character reference and place it in a rainy city, 9:16, high quality.",
       revision: "/gpt-image Edit the last image: change only the jacket to red.",
     },
@@ -609,6 +610,7 @@ function printGettingStartedGuide(guide, asJson) {
   );
   process.stdout.write(`Codex example: ${guide.examples.codex}\n`);
   process.stdout.write(`Claude example: ${guide.examples.claude}\n`);
+  process.stdout.write(`Qwen example: ${guide.examples.qwen}\n`);
   process.stdout.write(`Reference example: ${guide.examples.reference}\n`);
   process.stdout.write(`Revision example: ${guide.examples.revision}\n\n`);
   process.stdout.write(`${guide.note}\n`);
@@ -1006,8 +1008,8 @@ async function installOne(target, dryRun) {
 
 function selectedTargetLocations(rawTarget, skillName = SKILL_NAME) {
   const target = String(rawTarget || "all").toLowerCase();
-  if (!new Set(["all", "codex", "claude"]).has(target)) {
-    throw new CliError("--target must be all, codex, or claude.", 2);
+  if (!new Set(["all", "codex", "claude", "qwen"]).has(target)) {
+    throw new CliError("--target must be all, codex, claude, or qwen.", 2);
   }
   const locations = [];
   if (target === "all" || target === "codex") {
@@ -1015,6 +1017,9 @@ function selectedTargetLocations(rawTarget, skillName = SKILL_NAME) {
   }
   if (target === "all" || target === "claude") {
     locations.push(path.join(os.homedir(), ".claude", "skills", skillName));
+  }
+  if (target === "all" || target === "qwen") {
+    locations.push(path.join(os.homedir(), ".qwen", "skills", skillName));
   }
   return locations;
 }
@@ -1218,6 +1223,7 @@ async function buildDoctorReport(knownAuth = null) {
   const platform = platformRuntime();
   const codexSkill = await safeTargetState(path.join(os.homedir(), ".agents", "skills", SKILL_NAME));
   const claudeSkill = await safeTargetState(path.join(os.homedir(), ".claude", "skills", SKILL_NAME));
+  const qwenSkill = await safeTargetState(path.join(os.homedir(), ".qwen", "skills", SKILL_NAME));
   const legacyCodexSkill = await legacyTargetState(
     path.join(os.homedir(), ".agents", "skills", LEGACY_SKILL_NAME),
   );
@@ -1236,8 +1242,8 @@ async function buildDoctorReport(knownAuth = null) {
     nextAction = "After user approval, run install-codex --yes, open a new shell if needed, then rerun doctor.";
   } else if (auth.verified !== true) {
     nextAction = "Run login and complete Sign in with ChatGPT, then rerun doctor.";
-  } else if (codexSkill.state !== "installed" || claudeSkill.state !== "installed") {
-    nextAction = codexSkill.state === "occupied" || claudeSkill.state === "occupied"
+  } else if (codexSkill.state !== "installed" || claudeSkill.state !== "installed" || qwenSkill.state !== "installed") {
+    nextAction = codexSkill.state === "occupied" || claudeSkill.state === "occupied" || qwenSkill.state === "occupied"
       ? "Inspect the occupied host skill path. Do not replace it automatically."
       : "Run install --target all.";
   } else if (
@@ -1254,6 +1260,7 @@ async function buildDoctorReport(knownAuth = null) {
     api_environment_forwarded: false,
     codex_skill_installed: codexSkill.state === "installed",
     claude_skill_installed: claudeSkill.state === "installed",
+    qwen_skill_installed: qwenSkill.state === "installed",
     repository_owned_legacy_links_absent:
       legacyCodexSkill.state !== "owned-legacy-link" &&
       legacyClaudeSkill.state !== "owned-legacy-link",
@@ -1285,6 +1292,7 @@ async function buildDoctorReport(knownAuth = null) {
     codex_installer: installer,
     codex_skill_status: codexSkill.state,
     claude_skill_status: claudeSkill.state,
+    qwen_skill_status: qwenSkill.state,
     legacy_codex_skill_status: legacyCodexSkill.state,
     legacy_claude_skill_status: legacyClaudeSkill.state,
     best_practice_pass: bestPracticePass,

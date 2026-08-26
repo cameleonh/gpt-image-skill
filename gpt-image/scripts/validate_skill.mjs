@@ -203,7 +203,7 @@ requireCondition(
   "Every delegated concept must use a unique output path.",
 );
 
-const batchBody = runner.match(/async function runBatch\(args\) \{[\s\S]*?\n\}(?=\n\nasync function runPlan)/)?.[0] || "";
+const batchBody = runner.match(/async function runBatch\(args\) \{[\s\S]*?\n\}(?=\r?\n\r?\nasync function runPlan)/)?.[0] || "";
 requireCondition(Boolean(batchBody), "Runner must contain the bounded batch implementation.");
 requireCondition(!batchBody.includes("buildDoctorReport"), "Batch must not run a Doctor gate.");
 requireCondition(!batchBody.includes("runPlan"), "Batch must not run a planning gate.");

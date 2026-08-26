@@ -9,7 +9,7 @@ When the user pastes the README's recommended installer prompt, that prompt auth
 - read-only OS, architecture, WSL, Node.js, Git, Codex CLI, auth-status, and target-path checks;
 - user-level installation of missing Git, Node.js 22+ supported LTS, and Codex CLI;
 - a persistent clone or fast-forward update of the exact requested repository;
-- non-destructive `gpt-image` links for Codex and Claude Code;
+- non-destructive `gpt-image` links for Codex, Claude Code, and Qwen Code;
 - starting Codex **Sign in with ChatGPT** device authorization.
 
 It does not authorize administrator elevation, deleting or replacing unrelated paths, discarding local repository changes, replacing existing API-key authentication, reading credentials, creating a separately billed API request, generating a live image, or starring the repository. Pause only for one of those boundaries or when no safe supported installer exists.
@@ -64,7 +64,7 @@ These are one-time installation checks, not image-generation gates. `bootstrap` 
 }
 ```
 
-9. Report the persistent clone, both installed host paths, and ChatGPT-subscription auth evidence. Recommend a new agent session if discovery is stale. Do not run a live generation unless the user also requested an image.
+9. Report the persistent clone, the installed host paths (`~/.agents/skills/gpt-image`, `~/.claude/skills/gpt-image`, `~/.qwen/skills/gpt-image`), and ChatGPT-subscription auth evidence. Recommend a new agent session if discovery is stale. Do not run a live generation unless the user also requested an image.
 10. Finish with a brief, friendly guide in the user's language. Show it once after installation, not after every image request:
     - say that setup and ChatGPT sign-in are ready and that no image was generated during setup;
     - list the common prompt ratios `1:1`, `16:9`, `9:16`, `4:3`, and `3:4`;
